@@ -1,16 +1,31 @@
-import {Conversations, ConversationsProps, Sender} from "@ant-design/x";
+import {Conversations, ConversationsProps} from "@ant-design/x";
 import {useState} from "react";
-import {GetProp, theme, App, Flex, Button} from "antd";
-import {BulbOutlined, BulbFilled} from "@ant-design/icons";
+import {Button, Dropdown, GetProp, MenuProps, message, Space, theme} from "antd";
+import {
+  BulbFilled,
+  BulbOutlined,
+  DeleteOutlined,
+  DownOutlined,
+  EditOutlined,
+  StopOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {useAppDispatch, useAppSelector} from "@/store/Hooks.ts";
+import {selectDarkMode, switchDarkMode} from "@/store/reducers/AppSettingSlice.ts";
+import {ChatInputBox} from "@/components/chat/ChatInputBox.tsx";
+import {PromptsBox} from "@/components/chat/PromptsBox.tsx";
 
-const items: GetProp<ConversationsProps, "items"> = Array.from({length: 3}).map((_, index) => ({
-  key: `item${index + 1}`,
-  label: `Conversation Item ${index + 1}`,
-}));
+const items: GetProp<ConversationsProps, "items"> = Array.from({length: 3})
+  .map((_, index) => ({
+    key: `item${index + 1}`,
+    label: `聊天 ${index + 1}`,
+  }));
 
 export function MainView() {
   const [activeKey, setActiveKey] = useState<string>("item1");
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+
+  const dispatch = useAppDispatch();
+  const isDarkMode = useAppSelector(selectDarkMode);
 
   const {token} = theme.useToken();
 
@@ -20,21 +35,76 @@ export function MainView() {
     borderRadius: token.borderRadius,
   };
 
-  const [value, setValue] = useState<string>("Hello? this is X!");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const {message} = App.useApp();
-
   // 切换主题
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    // 更新 body 背景色
-    document.body.classList.toggle("dark", !isDarkMode);
+    dispatch(switchDarkMode(!isDarkMode));
   };
 
+  const selectItems: MenuProps["items"] = [
+    {
+      label: "1st menu item",
+      key: "1",
+      icon: <UserOutlined/>,
+    },
+    {
+      label: "2nd menu item",
+      key: "2",
+      icon: <UserOutlined/>,
+    },
+    {
+      label: "3rd menu item",
+      key: "3",
+      icon: <UserOutlined/>,
+      danger: true,
+    },
+    {
+      label: "4rd menu item",
+      key: "4",
+      icon: <UserOutlined/>,
+      danger: true,
+      disabled: true,
+    },
+  ];
+
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    message.info("Click on menu item.");
+    console.log("click", e);
+  };
+
+  const menuProps = {
+    items: selectItems,
+    onClick: handleMenuClick,
+  };
+
+  const menuConfig: ConversationsProps["menu"] = (conversation) => ({
+    items: [
+      {
+        label: "Operation 1",
+        key: "operation1",
+        icon: <EditOutlined/>,
+      },
+      {
+        label: "Operation 2",
+        key: "operation2",
+        icon: <StopOutlined/>,
+        disabled: true,
+      },
+      {
+        label: "Operation 3",
+        key: "operation3",
+        icon: <DeleteOutlined/>,
+        danger: true,
+      },
+    ],
+    onClick: (menuInfo) => {
+      menuInfo.domEvent.stopPropagation();
+      message.info(`Click ${conversation.key} - ${menuInfo.key}`);
+    },
+  });
+
   return (
-    <Flex className="h-full transition-colors duration-300" gap="middle">
-      <Flex className="border-r border-neutral-200" vertical>
+    <div className="flex h-full transition-colors duration-300">
+      <div className="flex flex-col bg-white dark:bg-[#141414] border-r border-neutral-200 dark:border-neutral-800">
         <div>
           <Button
             type="text"
@@ -48,26 +118,26 @@ export function MainView() {
           onActiveChange={(v) => setActiveKey(v)}
           items={items}
           style={style}
-        />
-      </Flex>
-      <div className="h-full p-2 flex-1 flex flex-col justify-center">
-        <Sender
-          loading={loading}
-          value={value}
-          onChange={(v) => {
-            setValue(v);
-          }}
-          onSubmit={() => {
-            setValue("");
-            setLoading(true);
-            message.info("Send message!");
-          }}
-          onCancel={() => {
-            setLoading(false);
-            message.error("Cancel sending!");
-          }}
+          menu={menuConfig}
         />
       </div>
-    </Flex>
+      <div className="flex flex-col p-2">
+        <div className="flex gap-2">
+          <Dropdown menu={menuProps}>
+            <Button>
+              <Space>
+                Button
+                <DownOutlined/>
+              </Space>
+            </Button>
+          </Dropdown>
+        </div>
+        <div className="p-2 flex-1 flex flex-col gap-2 justify-center">
+          {/*<div className="flex-1"/>*/}
+          <PromptsBox/>
+          <ChatInputBox/>
+        </div>
+      </div>
+    </div>
   );
 }
