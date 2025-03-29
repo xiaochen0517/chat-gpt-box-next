@@ -1,7 +1,9 @@
 import {Sender} from "@ant-design/x";
 import {useState} from "react";
-import {Button, Divider, Flex, Switch, theme} from "antd";
-import {ApiOutlined, LinkOutlined, SearchOutlined} from "@ant-design/icons";
+import {Button, Divider, Flex, theme} from "antd";
+import {ApiOutlined} from "@ant-design/icons";
+import {ModelSelector} from "@/components/chat/main/ModelSelector.tsx";
+import {PromptSelector} from "@/components/chat/main/PromptSelector.tsx";
 
 export function ChatInputBox() {
 
@@ -26,12 +28,8 @@ export function ChatInputBox() {
           return (
             <Flex justify="space-between" align="center">
               <Flex gap="small" align="center">
-                <Button style={iconStyle} type="text" icon={<LinkOutlined/>}/>
-                <Divider type="vertical"/>
-                Deep Thinking
-                <Switch size="small"/>
-                <Divider type="vertical"/>
-                <Button icon={<SearchOutlined/>}>Global Search</Button>
+                <ModelSelector/>
+                <PromptSelector/>
               </Flex>
               <Flex align="center">
                 <Button type="text" style={iconStyle} icon={<ApiOutlined/>}/>
