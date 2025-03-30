@@ -1,5 +1,5 @@
-import {GetProp, message, theme} from "antd";
-import {DeleteOutlined, EditOutlined, StopOutlined} from "@ant-design/icons";
+import {Button, GetProp, message, theme} from "antd";
+import {DeleteOutlined, EditOutlined, PlusCircleOutlined, StopOutlined} from "@ant-design/icons";
 import {Conversations, ConversationsProps} from "@ant-design/x";
 import {useState} from "react";
 import {ChatMenuButton} from "@/components/chat/list/ChatMenuButton.tsx";
@@ -49,6 +49,17 @@ export function ChatListBlock() {
 
   return (
     <div className="flex flex-col bg-white dark:bg-[#141414] border-r border-neutral-200 dark:border-neutral-800">
+      <div className="px-3 pt-4">
+        <Button
+          type="primary"
+          shape="round"
+          icon={<PlusCircleOutlined/>}
+          onClick={() => {
+          }}
+        >
+          新对话
+        </Button>
+      </div>
       <Conversations
         className="flex-1"
         activeKey={activeKey}

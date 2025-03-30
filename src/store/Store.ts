@@ -1,9 +1,11 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import appSettingReducer from "@/store/reducers/AppSettingSlice.ts";
 import {persistStore} from "redux-persist";
+import persistedSettingAppReducer from "@/store/reducers/SettingsPageSlice.ts";
 
 const rootReducer = combineReducers({
   appSetting: appSettingReducer,
+  settingsPage: persistedSettingAppReducer,
 });
 
 export const store = configureStore({

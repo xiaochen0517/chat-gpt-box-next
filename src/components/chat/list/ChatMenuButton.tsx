@@ -5,13 +5,17 @@ import {selectDarkMode} from "@/store/reducers/AppSettingSlice.ts";
 
 const chatMenuItems: MenuProps["items"] = [
   {
-    key: "2",
+    key: "manage",
     type: "group",
-    label: "其他配置",
+    label: "功能管理",
     children: [
       {
-        key: "2-2",
-        label: "语言设置",
+        key: "manage_models",
+        label: "模型管理",
+      },
+      {
+        key: "manage_prompts",
+        label: "提示词管理",
       },
     ],
   },
@@ -56,6 +60,15 @@ export function ChatMenuButton() {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     console.log("click", e);
     switch (e.key) {
+      case "manage_models":
+        dispatch({type: "settingsPage/openDrawer", payload: "models"});
+        break;
+      case "manage_prompts":
+        dispatch({type: "settingsPage/openDrawer", payload: "prompts"});
+        break;
+      case "basic_settings_basic":
+        dispatch({type: "settingsPage/openDrawer", payload: "settings"});
+        break;
       case "basic_settings_ui_mode_dark":
         if (!isDarkMode) {
           dispatch({type: "appSetting/switchDarkMode", payload: true});
