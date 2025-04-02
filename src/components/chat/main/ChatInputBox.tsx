@@ -1,6 +1,6 @@
 import {Sender} from "@ant-design/x";
 import {useState} from "react";
-import {Button, Divider, Flex, theme} from "antd";
+import {Button, Divider, theme} from "antd";
 import {ApiOutlined} from "@ant-design/icons";
 import {ModelSelector} from "@/components/chat/main/ModelSelector.tsx";
 import {PromptSelector} from "@/components/chat/main/PromptSelector.tsx";
@@ -8,6 +8,9 @@ import {PromptSelector} from "@/components/chat/main/PromptSelector.tsx";
 export function ChatInputBox() {
 
   const {token} = theme.useToken();
+
+  const [isNewChat, _] = useState(false);
+
   const [value, setValue] = useState<string>("Hello? this is X!");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -21,17 +24,21 @@ export function ChatInputBox() {
       <Sender
         value={value}
         onChange={setValue}
-        autoSize={{minRows: 2, maxRows: 6}}
+        autoSize={{minRows: 2, maxRows: 4}}
         placeholder="Press Enter to send message"
         footer={({components}) => {
           const {SendButton, LoadingButton, SpeechButton} = components;
           return (
-            <Flex justify="space-between" align="center">
-              <Flex gap="small" align="center">
-                <ModelSelector/>
-                <PromptSelector/>
-              </Flex>
-              <Flex align="center">
+            <div className="flex justify-between">
+              <div className="flex gap-2">
+                {isNewChat && (
+                  <>
+                    <ModelSelector/>
+                    <PromptSelector/>
+                  </>
+                )}
+              </div>
+              <div className="flex items-center">
                 <Button type="text" style={iconStyle} icon={<ApiOutlined/>}/>
                 <Divider type="vertical"/>
                 <SpeechButton style={iconStyle}/>
@@ -41,8 +48,8 @@ export function ChatInputBox() {
                 ) : (
                   <SendButton type="primary" disabled={false}/>
                 )}
-              </Flex>
-            </Flex>
+              </div>
+            </div>
           );
         }}
         onSubmit={() => {

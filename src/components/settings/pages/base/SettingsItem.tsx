@@ -3,7 +3,7 @@ import {ReactNode} from "react";
 interface SettingsItemProps {
   title?: string;
   label: string;
-  right: boolean;
+  right?: boolean;
   width?: number;
   children: ReactNode;
 }
