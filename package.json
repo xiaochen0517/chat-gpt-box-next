@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
@@ -32,6 +32,8 @@
     "tailwindcss": "^4.0.17"
   },
   "devDependencies": {
+    "@react-buddy/ide-toolbox": "^2.4.0",
+    "@react-buddy/palette-antd": "^5.3.1",
     "@tauri-apps/cli": "^2",
     "@types/node": "^22.13.14",
     "@types/react": "^18.3.1",
