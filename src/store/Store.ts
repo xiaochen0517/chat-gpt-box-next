@@ -1,11 +1,14 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
-import appSettingReducer from "@/store/reducers/AppSettingSlice.ts";
 import {persistStore} from "redux-persist";
+import appSettingReducer from "@/store/reducers/AppSettingSlice.ts";
 import persistedSettingAppReducer from "@/store/reducers/SettingsPageSlice.ts";
+import modelsDataReducer from "@/store/reducers/data/ModelsDataSlice.ts";
 
 const rootReducer = combineReducers({
   appSetting: appSettingReducer,
   settingsPage: persistedSettingAppReducer,
+  // Data Reducer
+  modelsData: modelsDataReducer,
 });
 
 export const store = configureStore({
