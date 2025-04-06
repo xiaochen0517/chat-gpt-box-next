@@ -1,6 +1,7 @@
-import {Form, Input, InputNumber, Modal, Select} from "antd";
-import {ReactNode} from "react";
+import {App, Form, Input, InputNumber, Modal, Select} from "antd";
+import {ReactNode, useState} from "react";
 import {ModelApiType, ModelCapabilitiesType, ModelInfo, ModelType} from "@/store/reducers/data/ModelsDataSlice.ts";
+import {useAppDispatch} from "@/store/Hooks";
 
 interface ModelEditorDialogProps {
   open: boolean;
@@ -56,17 +57,40 @@ const baseUrlPrefixSelector = (
 );
 
 export function ModelEditorDialog({open, onClose}: ModelEditorDialogProps) {
+
+  const {message} = App.useApp();
   const [form] = Form.useForm();
+
+  const dispatch = useAppDispatch();
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const handleOkClick = () => {
+    setConfirmLoading(true);
+    form.validateFields()
+      .then((values) => {
+        try {
+          console.log("values", values);
+          dispatch({type: "modelsData/addModel", payload: values});
+          onClose();
+        } catch (error) {
+          console.error("model editor form submit error", error);
+        } finally {
+          setConfirmLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.error("model editor form validate error", error);
+        message.info("请检查表单填写是否正确");
+        setConfirmLoading(false);
+      });
+  };
 
   return (
     <Modal
       title="模型编辑"
       centered
       open={open}
-      onOk={() => {
-        console.log("form", form.getFieldsValue());
-        // onClose();
-      }}
+      onOk={handleOkClick}
       onCancel={() => {
         onClose();
       }}
@@ -74,43 +98,59 @@ export function ModelEditorDialog({open, onClose}: ModelEditorDialogProps) {
       cancelText="取消"
       maskClosable={false}
       width={600}
+      confirmLoading={confirmLoading}
     >
       <div className="px-2 py-4">
-        <Form
-          form={form}
-          layout="vertical"
-          requiredMark="optional"
-          onChange={(event) => {
-            console.log("onChange", event);
-          }}
-        >
-          <Form.Item<ModelInfo> name="apiType" label="接口类型" required>
+        <Form form={form} layout="vertical" requiredMark="optional">
+          <Form.Item<ModelInfo>
+            name="apiType"
+            label="接口类型"
+            rules={[{required: true, message: "请选择模型Api类型"}]}
+          >
             <Select options={ModelApiTypeSelectData}/>
           </Form.Item>
-          <Form.Item<ModelInfo> name="modelName" label="模型名称" required>
+          <Form.Item<ModelInfo>
+            name="modelName"
+            label="模型名称"
+            rules={[{required: true, min: 3, max: 20, message: "请输入模型名称，长度为 3-20。"}]}
+          >
             <Input type="text" placeholder="请输入模型名称"/>
           </Form.Item>
-          <Form.Item<ModelInfo> name="modelType" label="模型类型" required tooltip="选择当前模型的类型（单选）">
+          <Form.Item<ModelInfo>
+            name="modelType"
+            label="模型类型"
+            tooltip="选择当前模型的类型（单选）"
+            rules={[{required: true, message: "请选择当前模型的类型"}]}
+          >
             <Select options={ModelTypeSelectData}/>
           </Form.Item>
-          <Form.Item<ModelInfo> name="modelCapabilities" label="能力标签" required tooltip="选择当前模型具有能力（多选）">
+          <Form.Item<ModelInfo>
+            name="modelCapabilities"
+            label="能力标签"
+            tooltip="选择当前模型具有能力（多选）"
+            rules={[{required: true, message: "请选择当前模型具有能力"}]}
+          >
             <Select mode="multiple" options={ModelCapabilitiesSelectData}/>
           </Form.Item>
           <Form.Item<ModelInfo>
             name="contextWindowSize"
             label="上下文大小"
-            required
             tooltip="上下文大小是模型可以接收的token大小"
-            normalize={(value) => (typeof value === 'string' ? Number(value) : value)}
+            normalize={(value) => (typeof value === "string" ? Number(value) : value)}
+            rules={[{required: true, message: "请输入当前模型的上下文大小限制"}]}
           >
             <div className="w-48">
               <InputNumber addonAfter={<span>K</span>}/>
             </div>
           </Form.Item>
-          <Form.Item<ModelInfo> name="baseUrl" label="请求地址" required>
+          <Form.Item<ModelInfo>
+            name="baseUrl"
+            label="请求地址"
+            rules={[{required: true, message: "请输入当前模型的请求地址"}]}
+          >
             <Input addonBefore={baseUrlPrefixSelector}/>
           </Form.Item>
-          <Form.Item<ModelInfo> name="apiKey" label="ApiKey" required>
+          <Form.Item<ModelInfo> name="apiKey" label="ApiKey">
             <Input placeholder="请输入请求ApiKey"/>
           </Form.Item>
         </Form>

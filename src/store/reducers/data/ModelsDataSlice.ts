@@ -12,11 +12,10 @@ export interface ModelInfo {
   "modelType": ModelType,
   "modelName": string,
   "apiType": ModelApiType,
-  "labels": string[],
   "modelCapabilities": ModelCapabilitiesType[],
   "contextWindowSize": number,
   "baseUrl": string,
-  "apiKey": string,
+  "apiKey": string | null,
   "headers": {
     string: string
   },

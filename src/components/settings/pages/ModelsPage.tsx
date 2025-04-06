@@ -1,9 +1,34 @@
 import {Button, List, Tag} from "antd";
 import {PlusCircleOutlined} from "@ant-design/icons";
 import {useAppSelector} from "@/store/Hooks.ts";
-import {selectModelList} from "@/store/reducers/data/ModelsDataSlice.ts";
+import {ModelApiType, selectModelList} from "@/store/reducers/data/ModelsDataSlice.ts";
 import {ModelEditorDialog} from "@/components/settings/pages/models/ModelEditorDialog.tsx";
 import {useState} from "react";
+
+const getAiIconClassName = (apiType: ModelApiType) => {
+  switch (apiType) {
+    case "openai":
+      return "icon-openai-fill";
+    case "deepseek":
+      return "icon-u585_mouseOver text-[#4D6BFE]";
+    case "gemini":
+      return "icon-gemini-ai text-[#448AFF]";
+    case "ollama":
+      return "icon-ollama";
+    case "anthropic":
+      return "icon-Anthropic text-[#CA9F7B]";
+  }
+};
+
+const ModelCapabilitiesData = {
+  "text": "文本生成",
+  "img-out": "图像输出",
+  "img-in": "图像输入",
+  "audio-out": "音频输出",
+  "audio-in": "音频输入",
+  "video-out": "视频输出",
+  "video-in": "视频输入",
+};
 
 export function ModelsPage() {
 
@@ -22,16 +47,20 @@ export function ModelsPage() {
       <List
         className="w-full"
         itemLayout="horizontal"
+        size="small"
         dataSource={modelList}
         renderItem={(model, index) => (
-          <div className=" border-b dark:border-neutral-700" key={index}>
-            <div className="px-4 py-2 flex hover:cursor-pointer hover:bg-neutral-300 dark:hover:bg-neutral-800 rounded-md">
+          <div className="mb-2 border-b border-neutral-200 dark:border-neutral-700" key={index}>
+            <div className="px-2 py-1 flex hover:cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-md">
               <div className="flex-1 flex flex-col gap-2">
-                <div>{model.modelName}</div>
+                <div className="flex flex-row items-center gap-2">
+                  <i className={"text-3xl iconfont " + getAiIconClassName(model.apiType)}/>
+                  <span className="text-base">{model.modelName}</span>
+                </div>
                 <div>
-                  {model.labels.map((label, idx) => (
+                  {model.modelCapabilities.map((label, idx) => (
                     <Tag key={idx} color="blue">
-                      {label}
+                      {ModelCapabilitiesData[label]}
                     </Tag>
                   ))}
                 </div>

@@ -1,4 +1,5 @@
 import "./App.css";
+import "@/assets/icons/iconfont.css";
 import {MainView} from "./views/MainView.tsx";
 import {App as AntdApp, ConfigProvider, theme} from "antd";
 import {useAppSelector} from "@/store/Hooks.ts";
