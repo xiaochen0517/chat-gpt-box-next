@@ -1,10 +1,20 @@
 import {App, Form, Input, InputNumber, Modal, Select} from "antd";
-import {ReactNode, useState} from "react";
-import {ModelApiType, ModelCapabilitiesType, ModelInfo, ModelType} from "@/store/reducers/data/ModelsDataSlice.ts";
-import {useAppDispatch} from "@/store/Hooks";
+import {ReactNode, useEffect, useState} from "react";
+import {
+  addModel,
+  ModelApiType,
+  ModelCapabilitiesType,
+  ModelInfo,
+  ModelType,
+  selectModelList,
+  updateModel,
+} from "@/store/reducers/data/ModelsDataSlice.ts";
+import {useAppDispatch, useAppSelector} from "@/store/Hooks";
+import _ from "lodash";
 
 interface ModelEditorDialogProps {
   open: boolean;
+  editIndex: number | null;
   onClose: () => void;
 }
 
@@ -56,13 +66,27 @@ const baseUrlPrefixSelector = (
   />
 );
 
-export function ModelEditorDialog({open, onClose}: ModelEditorDialogProps) {
+export function ModelEditorDialog({open, editIndex, onClose}: ModelEditorDialogProps) {
 
   const {message} = App.useApp();
   const [form] = Form.useForm();
 
   const dispatch = useAppDispatch();
+  const modelList = useAppSelector(selectModelList);
   const [confirmLoading, setConfirmLoading] = useState(false);
+
+  useEffect(() => {
+    if (editIndex !== null && editIndex >= 0 && open) {
+      let modelInfo: ModelInfo = _.cloneDeep(modelList[editIndex]);
+      modelInfo.contextWindowSize = String(modelInfo.contextWindowSize);
+      form?.setFieldsValue(modelInfo);
+    }
+  }, [open]);
+
+  const callDialogClose = () => {
+    form.resetFields();
+    onClose();
+  };
 
   const handleOkClick = () => {
     setConfirmLoading(true);
@@ -70,8 +94,12 @@ export function ModelEditorDialog({open, onClose}: ModelEditorDialogProps) {
       .then((values) => {
         try {
           console.log("values", values);
-          dispatch({type: "modelsData/addModel", payload: values});
-          onClose();
+          if (editIndex !== null && editIndex >= 0) {
+            dispatch(updateModel({index: editIndex, modelInfo: values}));
+          } else {
+            dispatch(addModel(values));
+          }
+          callDialogClose();
         } catch (error) {
           console.error("model editor form submit error", error);
         } finally {
@@ -91,9 +119,7 @@ export function ModelEditorDialog({open, onClose}: ModelEditorDialogProps) {
       centered
       open={open}
       onOk={handleOkClick}
-      onCancel={() => {
-        onClose();
-      }}
+      onCancel={callDialogClose}
       okText="确定"
       cancelText="取消"
       maskClosable={false}
@@ -139,9 +165,7 @@ export function ModelEditorDialog({open, onClose}: ModelEditorDialogProps) {
             normalize={(value) => (typeof value === "string" ? Number(value) : value)}
             rules={[{required: true, message: "请输入当前模型的上下文大小限制"}]}
           >
-            <div className="w-48">
-              <InputNumber addonAfter={<span>K</span>}/>
-            </div>
+            <InputNumber className="w-48" addonAfter={<span>K</span>}/>
           </Form.Item>
           <Form.Item<ModelInfo>
             name="baseUrl"

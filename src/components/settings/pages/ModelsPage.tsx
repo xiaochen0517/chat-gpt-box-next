@@ -1,7 +1,7 @@
-import {Button, List, Tag} from "antd";
+import {App, Button, List, Popconfirm, Tag} from "antd";
 import {PlusCircleOutlined} from "@ant-design/icons";
-import {useAppSelector} from "@/store/Hooks.ts";
-import {ModelApiType, selectModelList} from "@/store/reducers/data/ModelsDataSlice.ts";
+import {useAppDispatch, useAppSelector} from "@/store/Hooks.ts";
+import {ModelApiType, removeModel, selectModelList} from "@/store/reducers/data/ModelsDataSlice.ts";
 import {ModelEditorDialog} from "@/components/settings/pages/models/ModelEditorDialog.tsx";
 import {useState} from "react";
 
@@ -32,14 +32,30 @@ const ModelCapabilitiesData = {
 
 export function ModelsPage() {
 
+  const {message} = App.useApp();
+  const dispatch = useAppDispatch();
   const modelList = useAppSelector(selectModelList);
   const [open, setOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+
+  const handleEditorDialogClose = () => {
+    setOpen(false);
+    setEditIndex(null);
+  };
+
+  const handleEditModelClick = (index: number) => {
+    setEditIndex(index);
+    setOpen(true);
+  };
+
+  const handleDeleteModelClick = (index: number) => {
+    dispatch(removeModel(index));
+    message.success("模型成功删除");
+  };
 
   return (
     <div className="flex flex-col gap-4 items-start">
-      <ModelEditorDialog
-        open={open} onClose={() => setOpen(false)}
-      />
+      <ModelEditorDialog open={open} editIndex={editIndex} onClose={handleEditorDialogClose}/>
       <Button type="primary" onClick={() => setOpen(true)}>
         <PlusCircleOutlined className="mr-2"/>
         添加模型
@@ -66,12 +82,20 @@ export function ModelsPage() {
                 </div>
               </div>
               <div className="flex gap-2 items-center">
-                <Button type="primary">
+                <Button type="primary" onClick={() => handleEditModelClick(index)}>
                   修改
                 </Button>
-                <Button type="primary" danger>
-                  移除
-                </Button>
+                <Popconfirm
+                  title="删除模型"
+                  description="确定要删除该模型吗？"
+                  onConfirm={() => handleDeleteModelClick(index)}
+                  okText="确认"
+                  cancelText="取消"
+                >
+                  <Button type="primary" danger>
+                    移除
+                  </Button>
+                </Popconfirm>
               </div>
             </div>
           </div>

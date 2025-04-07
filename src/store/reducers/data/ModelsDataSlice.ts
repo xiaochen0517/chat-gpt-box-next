@@ -36,12 +36,30 @@ export const modelsDataSlice: Slice<ModelsDataState> = createSlice({
     addModel: (state, action: PayloadAction<ModelInfo>) => {
       state.models.push(action.payload);
     },
+    updateModel: (state, action: PayloadAction<{ index: number, modelInfo: ModelInfo }>) => {
+      const {index, modelInfo} = action.payload;
+      if (index < 0 || index >= state.models.length || !modelInfo) {
+        console.error("Invalid index or modelInfo");
+        return;
+      }
+      state.models[index] = modelInfo;
+    },
+    removeModel: (state, action: PayloadAction<number>) => {
+      const index = action.payload;
+      if (index < 0 || index >= state.models.length) {
+        console.error("Invalid index");
+        return;
+      }
+      state.models.splice(index, 1);
+    },
   },
 });
 
 // 为每个 case reducer 函数生成 Action creators
 export const {
   addModel,
+  updateModel,
+  removeModel,
 } = modelsDataSlice.actions;
 
 // Selectors
