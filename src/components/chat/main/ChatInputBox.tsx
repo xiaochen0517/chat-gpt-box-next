@@ -9,7 +9,7 @@ export function ChatInputBox() {
 
   const {token} = theme.useToken();
 
-  const [isNewChat, _] = useState(false);
+  const [isNewChat, _] = useState(true);
 
   const [value, setValue] = useState<string>("Hello? this is X!");
   const [loading, setLoading] = useState<boolean>(false);

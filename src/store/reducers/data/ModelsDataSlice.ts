@@ -12,6 +12,7 @@ export interface ModelInfo {
   "modelType": ModelType,
   "modelName": string,
   "apiType": ModelApiType,
+  "functionCall": boolean,
   "modelCapabilities": ModelCapabilitiesType[],
   "contextWindowSize": number | string,
   "baseUrl": string,

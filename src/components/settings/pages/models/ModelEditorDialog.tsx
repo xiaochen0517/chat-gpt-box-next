@@ -1,4 +1,4 @@
-import {App, Form, Input, InputNumber, Modal, Select} from "antd";
+import {App, Form, Input, InputNumber, Modal, Select, Switch} from "antd";
 import {ReactNode, useEffect, useState} from "react";
 import {
   addModel,
@@ -140,6 +140,14 @@ export function ModelEditorDialog({open, editIndex, onClose}: ModelEditorDialogP
             rules={[{required: true, message: "请选择当前模型的类型"}]}
           >
             <Select options={ModelTypeSelectData}/>
+          </Form.Item>
+          <Form.Item<ModelInfo>
+            name="functionCall"
+            label="函数调用（function calling）"
+            tooltip="选择当前模型是否支持函数调用"
+            rules={[{required: true, message: "选择当前模型是否支持函数调用"}]}
+          >
+            <Switch/>
           </Form.Item>
           <Form.Item<ModelInfo>
             name="modelCapabilities"

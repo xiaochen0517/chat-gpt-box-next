@@ -1,26 +1,55 @@
-import {Dropdown, MenuProps} from "antd";
-import {DownOutlined} from "@ant-design/icons";
+import {Dropdown, List} from "antd";
+import {ApiOutlined, DownOutlined} from "@ant-design/icons";
+import {useAppSelector} from "@/store/Hooks.ts";
+import {ModelInfo, selectModelList} from "@/store/reducers/data/ModelsDataSlice.ts";
+import {getAiIconClassName} from "@/data/model/ModelInfoUtil.tsx";
+import {useState} from "react";
 
-export function ModelSelector() {
+interface ModelSelectorProps {
+  onModelSelect?: (model: ModelInfo) => void;
+}
 
-  const handleModelClick: MenuProps["onClick"] = (e) => {
-    console.log("click", e);
+export function ModelSelector({onModelSelect}: ModelSelectorProps) {
+
+  const modelList = useAppSelector(selectModelList);
+  const [currentModel, setCurrentModel] = useState<ModelInfo | null>(null);
+
+  const handleModelClick = (model: ModelInfo) => {
+    if (onModelSelect) {
+      onModelSelect(model);
+    }
+    setCurrentModel(model);
   };
 
   return (
     <Dropdown
-      menu={{onClick: handleModelClick}}
       trigger={["click"]}
       dropdownRender={() => {
         return (
-          <div className="w-80 rounded py-1 px-2 bg-neutral-100 dark:bg-neutral-800">
-            data
-          </div>
+          <List
+            className="w-full shadow-md border border-neutral-400 dark:border-neutral-800 rounded-md bg-neutral-100 dark:bg-neutral-900"
+            itemLayout="horizontal"
+            size="small"
+            dataSource={modelList}
+            renderItem={(model, _) => (
+              <List.Item
+                className="hover:cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800"
+                onClick={() => handleModelClick(model)}
+              >
+                <div className="flex gap-2 items-center">
+                  <i className={"text-base iconfont " + getAiIconClassName(model.apiType)}/>
+                  <span>{model.modelName}</span>
+                  {model.functionCall && <ApiOutlined style={{color: "#4D6BFE", fontSize: "1rem"}}/>}
+                </div>
+              </List.Item>
+            )}
+          />
         );
       }}
     >
       <div className="max-w-40 flex items-center gap-2 hover:cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800 px-2 py-1 rounded-md">
-        <div className="truncate">Deepseek-R1 32B 量化版本</div>
+        {currentModel && <i className={"text-base iconfont " + getAiIconClassName(currentModel.apiType)}/>}
+        <div className="truncate">{currentModel?.modelName ?? "NONE"}</div>
         <DownOutlined className="text-xs"/>
       </div>
     </Dropdown>

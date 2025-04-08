@@ -5,7 +5,7 @@ import {ChatMessagesBlock} from "@/components/chat/main/ChatMessagesBlock.tsx";
 
 export function ChatMainBlock() {
 
-  const [isNewChat, _] = useState(false);
+  const [isNewChat, _] = useState(true);
 
   return (
     <div className="flex-1 flex flex-col p-2">

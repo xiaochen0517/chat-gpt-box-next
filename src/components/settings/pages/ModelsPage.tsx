@@ -1,24 +1,10 @@
 import {App, Button, List, Popconfirm, Tag} from "antd";
 import {PlusCircleOutlined} from "@ant-design/icons";
 import {useAppDispatch, useAppSelector} from "@/store/Hooks.ts";
-import {ModelApiType, removeModel, selectModelList} from "@/store/reducers/data/ModelsDataSlice.ts";
+import {removeModel, selectModelList} from "@/store/reducers/data/ModelsDataSlice.ts";
 import {ModelEditorDialog} from "@/components/settings/pages/models/ModelEditorDialog.tsx";
 import {useState} from "react";
-
-const getAiIconClassName = (apiType: ModelApiType) => {
-  switch (apiType) {
-    case "openai":
-      return "icon-openai-fill";
-    case "deepseek":
-      return "icon-u585_mouseOver text-[#4D6BFE]";
-    case "gemini":
-      return "icon-gemini-ai text-[#448AFF]";
-    case "ollama":
-      return "icon-ollama";
-    case "anthropic":
-      return "icon-Anthropic text-[#CA9F7B]";
-  }
-};
+import {getAiIconClassName} from "@/data/model/ModelInfoUtil.tsx";
 
 const ModelCapabilitiesData = {
   "text": "文本生成",
