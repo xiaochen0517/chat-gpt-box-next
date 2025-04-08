@@ -13,7 +13,7 @@ export interface ModelInfo {
   "modelName": string,
   "apiType": ModelApiType,
   "modelCapabilities": ModelCapabilitiesType[],
-  "contextWindowSize": number,
+  "contextWindowSize": number | string,
   "baseUrl": string,
   "apiKey": string | null,
   "headers": {

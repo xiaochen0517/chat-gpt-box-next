@@ -56,15 +56,6 @@ const ModelCapabilitiesSelectData: ModelCapabilitiesSelectDataType[] = [
   {value: "video-in", label: <span>视频输入</span>},
 ];
 
-const baseUrlPrefixSelector = (
-  <Select
-    options={[
-      {value: "https", label: <span>https://</span>},
-      {value: "http", label: <span>http://</span>},
-    ]}
-    defaultValue="https"
-  />
-);
 
 export function ModelEditorDialog({open, editIndex, onClose}: ModelEditorDialogProps) {
 
@@ -163,16 +154,22 @@ export function ModelEditorDialog({open, editIndex, onClose}: ModelEditorDialogP
             label="上下文大小"
             tooltip="上下文大小是模型可以接收的token大小"
             normalize={(value) => (typeof value === "string" ? Number(value) : value)}
-            rules={[{required: true, message: "请输入当前模型的上下文大小限制"}]}
+            rules={[
+              {required: true, message: "请输入当前模型的上下文大小限制"},
+              {min: 1, message: "上下文大小必须大于0"},
+            ]}
           >
             <InputNumber className="w-48" addonAfter={<span>K</span>}/>
           </Form.Item>
           <Form.Item<ModelInfo>
             name="baseUrl"
             label="请求地址"
-            rules={[{required: true, message: "请输入当前模型的请求地址"}]}
+            rules={[
+              {required: true, message: "请输入当前模型的请求地址"},
+              {pattern: /^(https?:\/\/).+/, message: "请求地址必须以 http:// 或 https:// 开头"},
+            ]}
           >
-            <Input addonBefore={baseUrlPrefixSelector}/>
+            <Input placeholder={"请输入当前模型的请求地址"}/>
           </Form.Item>
           <Form.Item<ModelInfo> name="apiKey" label="ApiKey">
             <Input placeholder="请输入请求ApiKey"/>
