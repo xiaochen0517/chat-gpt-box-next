@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction, Slice} from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import {persistReducer} from "redux-persist";
+import {v4 as uuidv4} from "uuid";
 
 export type ModelType = "text-generation" | "multimodality";
 
@@ -9,6 +10,7 @@ export type ModelApiType = "openai" | "deepseek" | "gemini" | "ollama" | "anthro
 export type ModelCapabilitiesType = "text" | "img-out" | "img-in" | "audio-out" | "audio-in" | "video-out" | "video-in";
 
 export interface ModelInfo {
+  "id": string;
   "modelType": ModelType,
   "modelName": string,
   "apiType": ModelApiType,
@@ -35,6 +37,12 @@ export const modelsDataSlice: Slice<ModelsDataState> = createSlice({
   initialState,
   reducers: {
     addModel: (state, action: PayloadAction<ModelInfo>) => {
+      if (!action.payload) {
+        console.error("Invalid modelInfo");
+        return;
+      }
+      // generate a unique ID for the new model
+      action.payload.id = uuidv4();
       state.models.push(action.payload);
     },
     updateModel: (state, action: PayloadAction<{ index: number, modelInfo: ModelInfo }>) => {
@@ -43,6 +51,7 @@ export const modelsDataSlice: Slice<ModelsDataState> = createSlice({
         console.error("Invalid index or modelInfo");
         return;
       }
+      modelInfo.id = state.models[index].id; // keep the same ID
       state.models[index] = modelInfo;
     },
     removeModel: (state, action: PayloadAction<number>) => {

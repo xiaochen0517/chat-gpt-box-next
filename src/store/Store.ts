@@ -3,12 +3,14 @@ import {persistStore} from "redux-persist";
 import appSettingReducer from "@/store/reducers/AppSettingSlice.ts";
 import persistedSettingAppReducer from "@/store/reducers/SettingsPageSlice.ts";
 import modelsDataReducer from "@/store/reducers/data/ModelsDataSlice.ts";
+import promptsDataReducer from "@/store/reducers/data/PromptsDataSlice.ts";
 
 const rootReducer = combineReducers({
   appSetting: appSettingReducer,
   settingsPage: persistedSettingAppReducer,
   // Data Reducer
   modelsData: modelsDataReducer,
+  promptsData: promptsDataReducer,
 });
 
 export const store = configureStore({

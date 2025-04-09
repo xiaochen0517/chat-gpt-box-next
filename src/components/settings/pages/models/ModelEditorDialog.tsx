@@ -164,7 +164,14 @@ export function ModelEditorDialog({open, editIndex, onClose}: ModelEditorDialogP
             normalize={(value) => (typeof value === "string" ? Number(value) : value)}
             rules={[
               {required: true, message: "请输入当前模型的上下文大小限制"},
-              {min: 1, message: "上下文大小必须大于0"},
+              {
+                validator: (_, value) => {
+                  if (value && Number.parseInt(value) > 0) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error("上下文大小必须大于0"));
+                },
+              },
             ]}
           >
             <InputNumber className="w-48" addonAfter={<span>K</span>}/>

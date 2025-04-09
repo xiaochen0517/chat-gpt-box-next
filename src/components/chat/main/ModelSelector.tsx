@@ -49,7 +49,7 @@ export function ModelSelector({onModelSelect}: ModelSelectorProps) {
     >
       <div className="max-w-40 flex items-center gap-2 hover:cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-800 px-2 py-1 rounded-md">
         {currentModel && <i className={"text-base iconfont " + getAiIconClassName(currentModel.apiType)}/>}
-        <div className="truncate">{currentModel?.modelName ?? "NONE"}</div>
+        <div className="truncate">{currentModel?.modelName ?? "（未选择）"}</div>
         <DownOutlined className="text-xs"/>
       </div>
     </Dropdown>
