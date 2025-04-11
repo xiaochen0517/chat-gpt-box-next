@@ -4,6 +4,7 @@ import appSettingReducer from "@/store/reducers/AppSettingSlice.ts";
 import persistedSettingAppReducer from "@/store/reducers/SettingsPageSlice.ts";
 import modelsDataReducer from "@/store/reducers/data/ModelsDataSlice.ts";
 import promptsDataReducer from "@/store/reducers/data/PromptsDataSlice.ts";
+import chatDataReducer from "@/store/reducers/data/ChatDataSlice.ts";
 
 const rootReducer = combineReducers({
   appSetting: appSettingReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   // Data Reducer
   modelsData: modelsDataReducer,
   promptsData: promptsDataReducer,
+  chatData: chatDataReducer,
 });
 
 export const store = configureStore({
