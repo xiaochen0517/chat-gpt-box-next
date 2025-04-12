@@ -74,6 +74,9 @@ export const {
 
 // Selectors
 export const selectModelList = (state: { modelsData: ModelsDataState }) => state.modelsData.models;
+export const selectModelById = (state: { modelsData: ModelsDataState }, id: string) => {
+  return state.modelsData.models.find((model) => model.id === id);
+};
 
 // 持久化配置
 const modelsDataPersistConfig = {

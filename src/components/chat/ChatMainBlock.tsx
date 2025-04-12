@@ -2,8 +2,8 @@ import {PromptsBox} from "@/components/chat/main/PromptsBox.tsx";
 import {ChatInputBox} from "@/components/chat/main/ChatInputBox.tsx";
 import {ChatMessagesBlock} from "@/components/chat/main/ChatMessagesBlock.tsx";
 import {useAppSelector} from "@/store/Hooks.ts";
-import {selectCurrentChatId} from "@/store/reducers/AppSettingSlice.ts";
 import {StrUtil} from "@/utils/StrUtil.ts";
+import {selectCurrentChatId} from "@/store/reducers/data/ChatDataSlice.ts";
 
 export function ChatMainBlock() {
 

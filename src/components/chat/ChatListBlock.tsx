@@ -1,18 +1,12 @@
-import {Button, GetProp, message, theme} from "antd";
+import {Button, message, theme} from "antd";
 import {DeleteOutlined, EditOutlined, PlusCircleOutlined, StopOutlined} from "@ant-design/icons";
 import {Conversations, ConversationsProps} from "@ant-design/x";
-import {useState} from "react";
+import {useMemo} from "react";
 import {ChatMenuButton} from "@/components/chat/list/ChatMenuButton.tsx";
-
-
-const items: GetProp<ConversationsProps, "items"> = Array.from({length: 3})
-  .map((_, index) => ({
-    key: `item${index + 1}`,
-    label: `聊天 ${index + 1}`,
-  }));
+import {useAppDispatch, useAppSelector} from "@/store/Hooks.ts";
+import {selectChatList, selectCurrentChatId, setCurrentChatId} from "@/store/reducers/data/ChatDataSlice.ts";
 
 export function ChatListBlock() {
-  const [activeKey, setActiveKey] = useState<string>("item1");
 
   const {token} = theme.useToken();
 
@@ -47,6 +41,17 @@ export function ChatListBlock() {
     },
   });
 
+  const dispatch = useAppDispatch();
+  const currentChatId = useAppSelector(selectCurrentChatId);
+  const chatList = useAppSelector(selectChatList);
+
+  const conversationItems = useMemo(() => {
+    return chatList.map((chat) => ({
+      key: chat.id,
+      label: chat.chatName,
+    }));
+  }, [chatList]);
+
   return (
     <div className="flex flex-col bg-white dark:bg-[#141414] border-r border-neutral-200 dark:border-neutral-800">
       <div className="px-3 pt-4">
@@ -55,6 +60,7 @@ export function ChatListBlock() {
           shape="round"
           icon={<PlusCircleOutlined/>}
           onClick={() => {
+            dispatch(setCurrentChatId(""));
           }}
         >
           新对话
@@ -62,9 +68,9 @@ export function ChatListBlock() {
       </div>
       <Conversations
         className="flex-1"
-        activeKey={activeKey}
-        onActiveChange={(v) => setActiveKey(v)}
-        items={items}
+        activeKey={currentChatId}
+        onActiveChange={(chatId) => dispatch(setCurrentChatId(chatId))}
+        items={conversationItems}
         style={style}
         menu={menuConfig}
       />
