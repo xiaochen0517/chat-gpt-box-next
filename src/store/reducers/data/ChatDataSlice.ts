@@ -3,9 +3,9 @@ import storage from "redux-persist/lib/storage";
 import {persistReducer} from "redux-persist";
 import {CoreAssistantMessage, CoreSystemMessage, CoreToolMessage, CoreUserMessage, UIMessage} from "ai";
 import {ModelInfo, ModelsDataState, selectModelById} from "@/store/reducers/data/ModelsDataSlice.ts";
-import {DeepseekService} from "@/service/DeepseekService.ts";
 import {MsgUtil} from "@/utils/MsgUtil.ts";
 import {v4 as uuidv4} from "uuid";
+import {ModelService} from "@/service/ModelService.ts";
 
 export interface ChatInfo {
   "id": string,
@@ -128,7 +128,6 @@ export const chatDataSlice: Slice<ChatDataState> = createSlice({
     },
     updateAssistantMessage: (state, action: PayloadAction<{ chatId: string, content: string }>) => {
       const {chatId, content} = action.payload;
-      console.log("updateAssistantMessage: ", chatId, content);
       if (!chatId || !state.chatDetails[chatId]) {
         console.error("无效的聊天ID");
         return;
@@ -185,11 +184,10 @@ export const sendMessage = createAsyncThunk(
     // 获取消息列表
     const messages = selectMessageList(getState() as { chatData: ChatDataState; }, chatId);
     // 发送消息
-    await DeepseekService.sendMessage(
+    await ModelService.sendMessage(
       modelInfo,
       messages,
       (message: string) => {
-        console.log("assistant message: ", message);
         // 分发 action 来更新消息
         dispatch(updateAssistantMessage({
           chatId,

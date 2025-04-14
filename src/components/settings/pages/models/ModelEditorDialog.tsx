@@ -134,6 +134,13 @@ export function ModelEditorDialog({open, editIndex, onClose}: ModelEditorDialogP
             <Input type="text" placeholder="请输入模型名称"/>
           </Form.Item>
           <Form.Item<ModelInfo>
+            name="apiModelName"
+            label="调用名称"
+            rules={[{required: true, message: "请输入调用名称，长度为 3-20。"}]}
+          >
+            <Input type="text" placeholder="请输入调用名称"/>
+          </Form.Item>
+          <Form.Item<ModelInfo>
             name="modelType"
             label="模型类型"
             tooltip="选择当前模型的类型（单选）"

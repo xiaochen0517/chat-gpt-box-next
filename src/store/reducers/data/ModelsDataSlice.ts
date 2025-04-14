@@ -13,6 +13,7 @@ export interface ModelInfo {
   "id": string;
   "modelType": ModelType,
   "modelName": string,
+  "apiModelName": string,
   "apiType": ModelApiType,
   "functionCall": boolean,
   "modelCapabilities": ModelCapabilitiesType[],
