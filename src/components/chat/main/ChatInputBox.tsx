@@ -1,8 +1,8 @@
 import {Sender} from "@ant-design/x";
 import {useState} from "react";
 import {App} from "antd";
-import {ModelSelector} from "@/components/chat/main/ModelSelector.tsx";
-import {PromptSelector} from "@/components/chat/main/PromptSelector.tsx";
+import {ModelSelector} from "@/components/chat/main/selector/ModelSelector.tsx";
+import {PromptSelector} from "@/components/chat/main/selector/PromptSelector.tsx";
 import {useAppDispatch, useAppSelector} from "@/store/Hooks.ts";
 import {StrUtil} from "@/utils/StrUtil.ts";
 import {
