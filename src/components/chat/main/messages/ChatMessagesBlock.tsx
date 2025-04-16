@@ -41,7 +41,6 @@ export function ChatMessagesBlock() {
             <Bubble
               key={index}
               placement={message.role === "user" ? "end" : "start"}
-              typing={true}
               content={message.content}
               messageRender={content => renderMarkdown(content, isDarkMode)}
               avatar={{icon: message.role === "user" ? (<UserOutlined/>) : (<SettingOutlined/>), style: fooAvatar}}
