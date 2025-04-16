@@ -1,19 +1,11 @@
-import {Bubble, BubbleProps} from "@ant-design/x";
+import {Bubble} from "@ant-design/x";
 import {CSSProperties} from "react";
 import {SettingOutlined, UserOutlined} from "@ant-design/icons";
 import {useAppSelector} from "@/store/Hooks.ts";
 import {selectCurrentChatId, selectMessageList} from "@/store/reducers/data/ChatDataSlice.ts";
 import {StrUtil} from "@/utils/StrUtil.ts";
-import markdownit from "markdown-it";
-
-const md = markdownit({html: true, breaks: true});
-
-const renderMarkdown: BubbleProps["messageRender"] = (content) => (
-  <div>
-    {/* biome-ignore lint/security/noDangerouslySetInnerHtml: used in demo */}
-    <div dangerouslySetInnerHTML={{__html: md.render(content)}}/>
-  </div>
-);
+import {renderMarkdown} from "@/components/chat/main/messages/RenderMarkdown.tsx";
+import {selectDarkMode} from "@/store/reducers/AppSettingSlice.ts";
 
 export function ChatMessagesBlock() {
 
@@ -39,6 +31,8 @@ export function ChatMessagesBlock() {
     },
   );
 
+  const isDarkMode = useAppSelector(selectDarkMode);
+
   return (
     <div className="relative flex-1 flex flex-col gap-2">
       <div className="absolute left-0 right-0 top-0 bottom-0 overflow-y-auto">
@@ -47,8 +41,9 @@ export function ChatMessagesBlock() {
             <Bubble
               key={index}
               placement={message.role === "user" ? "end" : "start"}
+              typing={true}
               content={message.content}
-              messageRender={renderMarkdown}
+              messageRender={content => renderMarkdown(content, isDarkMode)}
               avatar={{icon: message.role === "user" ? (<UserOutlined/>) : (<SettingOutlined/>), style: fooAvatar}}
             />
           ))}
