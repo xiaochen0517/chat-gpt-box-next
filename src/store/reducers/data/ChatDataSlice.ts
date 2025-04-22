@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction, Slice} from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import {persistReducer} from "redux-persist";
-import {CoreAssistantMessage, CoreSystemMessage, CoreToolMessage, CoreUserMessage, UIMessage} from "ai";
+import {CoreAssistantMessage, CoreSystemMessage, CoreToolMessage, CoreUserMessage, UIMessage, UserContent} from "ai";
 import {ModelInfo, ModelsDataState, selectModelById} from "@/store/reducers/data/ModelsDataSlice.ts";
 import {MsgUtil} from "@/utils/MsgUtil.ts";
 import {v4 as uuidv4} from "uuid";
@@ -167,7 +167,7 @@ export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
   async ({chatId, userContent}: {
     chatId: string,
-    userContent: string,
+    userContent: UserContent,
   }, {dispatch, getState}) => {
     // 获取信息
     const chatInfo = selectChatInfoById(getState() as { chatData: ChatDataState; }, chatId);

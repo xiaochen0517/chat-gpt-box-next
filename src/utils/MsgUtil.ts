@@ -1,15 +1,15 @@
-import {CoreAssistantMessage, CoreSystemMessage, CoreUserMessage} from "ai";
+import {AssistantContent, CoreAssistantMessage, CoreSystemMessage, CoreUserMessage, UserContent} from "ai";
 
 export class MsgUtil {
 
-  public static createUserMessage(content: string): CoreUserMessage {
+  public static createUserMessage(content: UserContent): CoreUserMessage {
     return {
       role: "user",
       content: content,
     };
   }
 
-  public static createAssistantMessage(content: string): CoreAssistantMessage {
+  public static createAssistantMessage(content: AssistantContent): CoreAssistantMessage {
     return {
       role: "assistant",
       content: content,

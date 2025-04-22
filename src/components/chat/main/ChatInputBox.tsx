@@ -1,6 +1,6 @@
-import {Sender} from "@ant-design/x";
-import {useState} from "react";
-import {App} from "antd";
+import {Attachments, Sender} from "@ant-design/x";
+import {useRef, useState} from "react";
+import {App, Button, Divider} from "antd";
 import {ModelSelector} from "@/components/chat/main/selector/ModelSelector.tsx";
 import {PromptSelector} from "@/components/chat/main/selector/PromptSelector.tsx";
 import {useAppDispatch, useAppSelector} from "@/store/Hooks.ts";
@@ -14,6 +14,7 @@ import {
 } from "@/store/reducers/data/ChatDataSlice.ts";
 import {ModelInfo} from "@/store/reducers/data/ModelsDataSlice.ts";
 import {v4 as uuidv4} from "uuid";
+import { CloudUploadOutlined, LinkOutlined } from "@ant-design/icons";
 
 export function ChatInputBox() {
 
@@ -63,8 +64,10 @@ export function ChatInputBox() {
     setInputTextContent("");
   };
 
+  const divRef = useRef<HTMLDivElement>(null);
+
   return (
-    <div>
+    <div ref={divRef}>
       <Sender
         value={inputTextContent}
         onChange={setInputTextContent}
@@ -86,7 +89,21 @@ export function ChatInputBox() {
                 {/*<Button type="text" style={iconStyle} icon={<ApiOutlined/>}/>*/}
                 {/*<Divider type="vertical"/>*/}
                 {/*<SpeechButton style={iconStyle}/>*/}
-                {/*<Divider type="vertical"/>*/}
+                <Attachments
+                  beforeUpload={() => false}
+                  onChange={({ file }) => {
+                    message.info(`Mock upload: ${file.name}`);
+                  }}
+                  getDropContainer={() => divRef.current}
+                  placeholder={{
+                    icon: <CloudUploadOutlined />,
+                    title: '拖拽文件到此处上传',
+                    description: '支持文件类型：图片',
+                  }}
+                >
+                  <Button type="text" icon={<LinkOutlined />} />
+                </Attachments>
+                <Divider type="vertical"/>
                 {generating ? (
                   <LoadingButton type="default"/>
                 ) : (
