@@ -1,7 +1,16 @@
 import {createAsyncThunk, createSlice, PayloadAction, Slice} from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import {persistReducer} from "redux-persist";
-import {CoreAssistantMessage, CoreSystemMessage, CoreToolMessage, CoreUserMessage, UIMessage, UserContent} from "ai";
+import {
+  CoreAssistantMessage,
+  CoreSystemMessage,
+  CoreToolMessage,
+  CoreUserMessage,
+  ImagePart,
+  TextPart,
+  UIMessage,
+  UserContent,
+} from "ai";
 import {ModelInfo, ModelsDataState, selectModelById} from "@/store/reducers/data/ModelsDataSlice.ts";
 import {MsgUtil} from "@/utils/MsgUtil.ts";
 import {v4 as uuidv4} from "uuid";
@@ -13,6 +22,12 @@ export interface ChatInfo {
   "modelId": string, // 使用的模型id
   "promptContent": string, // 提示词内容
 }
+
+export type MessageType = CoreSystemMessage | CoreUserMessage | CoreAssistantMessage | CoreToolMessage | UIMessage;
+
+export type MessageRoleType = "system" | "user" | "assistant" | "tool" | "data";
+
+export type MessageContentType = string | TextPart | ImagePart | Array<TextPart | ImagePart>;
 
 export type MessageListType =
   Array<CoreSystemMessage | CoreUserMessage | CoreAssistantMessage | CoreToolMessage>
